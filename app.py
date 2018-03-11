@@ -31,52 +31,57 @@ def hello():
 @app.route('/api/v1/sales')
 def forecasting_sales():
 
-	period = request.args.get('period') 
-	data = pd.read_excel('notebooks/data/food-sp.xlsx')
-	variavel = 'VENDA'
+	try:
 
-	data.index = data['DATA']
+		period = request.args.get('period') 
+		data = pd.read_excel('notebooks/data/food-sp.xlsx')
+		variavel = 'VENDA'
 
-	interval = 96 - int(period)
-	df_train = data.iloc[1:interval,]
-	df_test = data.iloc[interval:96,] 
+		data.index = data['DATA']
 
-	df_train[variavel+'_box'], lmbda = stats.boxcox(df_train[variavel])
+		interval = 96 - int(period)
+		df_train = data.iloc[1:interval,]
+		df_test = data.iloc[interval:96,] 
 
-	# model = auto_arima(df_train[variavel+'_box'], 
- #                    n_fits=10,
- #                    start_p=0, 
- #                    start_q=0, 
- #                    max_p=5, 
- #                    max_q=5, 
- #                    m=20,
- #                    start_P=0, 
- #                    d=1, 
- #                    D=1, 
- #                    trace=True,
- #                    stationary=False,
- #                    error_action='ignore',
- #                    suppress_warnings=True,
- #                    stepwise=True)
+		df_train[variavel+'_box'], lmbda = stats.boxcox(df_train[variavel])
 
-	model = ARIMA(callback=None, disp=0, maxiter=50, method=None, order=(1, 1, 1),
-	   out_of_sample_size=0, scoring='mse', scoring_args={},
-	   seasonal_order=(2, 1, 1, 20), solver='lbfgs', start_params=None,
-	   suppress_warnings=True, transparams=True, trend='c')
+		# model = auto_arima(df_train[variavel+'_box'], 
+	 #                    n_fits=10,
+	 #                    start_p=0, 
+	 #                    start_q=0, 
+	 #                    max_p=5, 
+	 #                    max_q=5, 
+	 #                    m=20,
+	 #                    start_P=0, 
+	 #                    d=1, 
+	 #                    D=1, 
+	 #                    trace=True,
+	 #                    stationary=False,
+	 #                    error_action='ignore',
+	 #                    suppress_warnings=True,
+	 #                    stepwise=True)
 
-	model.fit(df_train[variavel+'_box'])
-	# model.summary()
+		model = ARIMA(callback=None, disp=0, maxiter=50, method=None, order=(1, 1, 1),
+		   out_of_sample_size=0, scoring='mse', scoring_args={},
+		   seasonal_order=(2, 1, 1, 20), solver='lbfgs', start_params=None,
+		   suppress_warnings=True, transparams=True, trend='c')
 
-	forecast = model.predict(n_periods=int(period))
+		model.fit(df_train[variavel+'_box'])
+		# model.summary()
 
-	y_pred = invboxcox(forecast,lmbda)
-	y_true = df_test[variavel].values
+		forecast = model.predict(n_periods=int(period))
 
-	acuracia = round(100 - mean_absolute_percentage_error(y_true , y_pred),0)
+		y_pred = invboxcox(forecast,lmbda)
+		y_true = df_test[variavel].values
 
-	retorno = {'acuracia' : acuracia, 'real' : y_true.tolist(), 'previsto' : y_pred.tolist()}
+		acuracia = round(100 - mean_absolute_percentage_error(y_true , y_pred),0)
 
-	return jsonify(retorno)
+		retorno = {'acuracia' : acuracia, 'real' : y_true.tolist(), 'previsto' : y_pred.tolist()}
+
+		return jsonify(retorno)
+
+	except Exception: 
+	  raise
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
