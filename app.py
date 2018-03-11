@@ -34,6 +34,8 @@ def forecasting_sales():
 
 		period = request.args.get('period') 
 		data = pd.read_excel('http://robsonfernandes.net/mestrado/data/food-sp.xlsx')
+
+		print('Passou 00')
 		variavel = 'VENDA'
 
 		data.index = data['DATA']
@@ -44,6 +46,7 @@ def forecasting_sales():
 
 		df_train[variavel+'_box'], lmbda = stats.boxcox(df_train[variavel])
 
+		print('Passou 01')
 		# model = auto_arima(df_train[variavel+'_box'], 
 	 #                    n_fits=10,
 	 #                    start_p=0, 
@@ -72,7 +75,7 @@ def forecasting_sales():
 
 		y_pred = invboxcox(forecast,lmbda)
 		y_true = df_test[variavel].values
-
+		print('Passou 02')
 		acuracia = round(100 - mean_absolute_percentage_error(y_true , y_pred),0)
 
 		retorno = {'acuracia' : acuracia, 'real' : y_true.tolist(), 'previsto' : y_pred.tolist()}
