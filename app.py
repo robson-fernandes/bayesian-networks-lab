@@ -25,10 +25,9 @@ def mean_absolute_percentage_error(y_true, y_pred):
 
 @app.route('/')
 def hello():
-	period = request.args.get('period') 
+	period = request.args.get('period')
 	data = pd.read_excel('http://robsonfernandes.net/mestrado/data/food-sp.xlsx')
-
-    return 'Fast Food - Forecasting!'
+	return 'Fast Food - Forecasting!'
 
 @app.route('/api/v1/sales')
 def forecasting_sales():
