@@ -34,7 +34,7 @@ def forecasting_sales():
 	try:
 
 		period = request.args.get('period') 
-		data = pd.read_excel('notebooks/data/food-sp.xlsx')
+		data = pd.read_excel('http://robsonfernandes.net/mestrado/data/food-sp.xlsx')
 		variavel = 'VENDA'
 
 		data.index = data['DATA']
@@ -89,7 +89,7 @@ def forecasting_sales():
 def handle_500(e=None):
     app.logger.error(traceback.format_exc())
     return 'Internal server error occured', 500
-    
+
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
