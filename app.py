@@ -1,6 +1,5 @@
 import os
 from flask import Flask, request, jsonify
-import traceback   
 import numpy as np
 import pandas as pd
 from pyramid.arima import auto_arima, ARIMA
@@ -82,13 +81,6 @@ def forecasting_sales():
 
 	except Exception: 
 	  raise
-
-
-
-@app.errorhandler(Exception)
-def handle_500(e=None):
-    app.logger.error(traceback.format_exc())
-    return 'Internal server error occured', 500
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
