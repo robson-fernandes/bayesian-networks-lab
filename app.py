@@ -25,8 +25,6 @@ def mean_absolute_percentage_error(y_true, y_pred):
 
 @app.route('/')
 def hello():
-	period = request.args.get('period')
-	data = pd.read_csv('http://robsonfernandes.net/mestrado/data/food-sp.csv')
 	return 'Fast Food - Forecasting!'
 
 @app.route('/api/v1/sales')
@@ -35,7 +33,7 @@ def forecasting_sales():
 	try:
 
 		period = request.args.get('period') 
-		data = pd.read_excel('http://robsonfernandes.net/mestrado/data/food-sp.xlsx')
+		data = pd.read_csv('http://robsonfernandes.net/mestrado/data/food-sp.csv')
 
 		print('Passou 00')
 		variavel = 'VENDA'
