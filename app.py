@@ -23,20 +23,6 @@ def mean_absolute_percentage_error(y_true, y_pred):
     y_true, y_pred = np.array(y_true), np.array(y_pred)
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100    
 
-@app.route('/teste')
-def hello():
-	import pandas as pd
-	from rpy2 import robjects as ro
-	from rpy2.robjects import pandas2ri
-	pandas2ri.activate()
-	R = ro.r
-
-	df = pd.DataFrame({'x': [1,2,3,4,5], 
-	                   'y': [2,1,3,5,4]})
-
-	M = R.lm('y~x', data=df)
-	result = R.summary(M).rx2('coefficients')
-	return result
 
 @app.route('/')
 def hello():
